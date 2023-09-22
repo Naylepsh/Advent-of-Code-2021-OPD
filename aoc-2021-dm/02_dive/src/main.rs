@@ -10,11 +10,11 @@ fn main() -> io::Result<()> {
     // Create a buffered reader for efficient reading.
     let reader = BufReader::new(file);
 
-    let (mut horizontal, mut depth) = (0_i32, 0_i32);
+    let (mut horizontal, mut depth, mut aim) = (0_i32, 0_i32, 0_i32);
 
     for line in reader.lines() {
         let line = line?;
-        _reader_command(line, &mut horizontal, &mut depth);
+        _reader_command(line, &mut horizontal, &mut depth, &mut aim);
     }
 
     println!("{}", horizontal * depth);
@@ -22,7 +22,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn _reader_command(line: String, horizontal: &mut i32, depth: &mut i32) {
+fn _reader_command(line: String, horizontal: &mut i32, depth: &mut i32, aim: &mut i32) {
     let accepted_commands = vec!["forward", "down", "up"];
 
     let parts: Vec<&str> = line.split_whitespace().collect();
@@ -33,10 +33,11 @@ fn _reader_command(line: String, horizontal: &mut i32, depth: &mut i32) {
             if accepted_commands.contains(&command) {
                 if command == &"forward" {
                     *horizontal += int_value;
+                    *depth += *aim * int_value;
                 } else if command == &"down" {
-                    *depth += int_value;
+                    *aim += int_value;
                 } else if command == &"up" {
-                    *depth -= int_value;
+                    *aim -= int_value;
                 }
             }
         }

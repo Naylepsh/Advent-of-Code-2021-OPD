@@ -63,7 +63,7 @@ impl TryFrom<String> for Move {
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let (direction, distance) = value
-            .split(" ")
+            .split_whitespace()
             .collect_tuple()
             .ok_or(eyre!("Invalid Move"))?;
         let distance: i32 = distance.parse().context("Invalid distance")?;

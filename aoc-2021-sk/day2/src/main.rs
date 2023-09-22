@@ -45,7 +45,6 @@ fn solve_second(commands: Vec<(i32, i32)>) -> i32 {
 }
 
 fn main() {
-    // let lines = read_lines("./input.txt");
     let lines = read_lines("./input.txt");
     let commands = lines.iter().map(parse_command).collect::<Vec<_>>();
     // let result = solve_first(commands);

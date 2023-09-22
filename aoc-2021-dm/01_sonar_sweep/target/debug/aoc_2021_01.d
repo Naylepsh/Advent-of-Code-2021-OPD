@@ -1,1 +1,0 @@
-/Users/damian.mankowski/Desktop/personal/rust/aoc-2021-opd/aoc-2021-dm/01_sonar_sweep/target/debug/aoc_2021_01: /Users/damian.mankowski/Desktop/personal/rust/aoc-2021-opd/aoc-2021-dm/01_sonar_sweep/src/main.rs

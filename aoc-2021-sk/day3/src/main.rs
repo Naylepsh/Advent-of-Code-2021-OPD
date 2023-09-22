@@ -51,14 +51,12 @@ fn main() {
     counts.iter().for_each(|(ones, zeros)| {
         if ones > zeros {
             gamma = (gamma << 1) + 1;
-            epsilon = (epsilon << 1) + 0;
+            epsilon <<= 1;
         } else {
-            gamma = (gamma << 1) + 0;
+            gamma <<= 1;
             epsilon = (epsilon << 1) + 1;
         };
     });
-    let mut oxygen_candidates = counts.clone();
-    let mut i = 0;
     let result = gamma * epsilon;
 
     println!("g:{} e:{} r:{}", gamma, epsilon, result);

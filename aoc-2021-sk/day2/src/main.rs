@@ -9,7 +9,7 @@ fn read_lines(filename: &str) -> Vec<String> {
 }
 
 fn parse_command(command: &String) -> (i32, i32) {
-    let split = command.split(" ").collect::<Vec<_>>();
+    let split = command.split_whitespace().collect::<Vec<_>>();
     match split.len() {
         2 => {
             let unit = split[1].parse().unwrap_or(0);

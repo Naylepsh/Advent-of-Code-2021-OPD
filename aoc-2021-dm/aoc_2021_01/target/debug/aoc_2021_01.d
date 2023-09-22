@@ -1,0 +1,1 @@
+/Users/damian.mankowski/Desktop/personal/rust/aoc-2021-opd/aoc-2021-dm/aoc_2021_01/target/debug/aoc_2021_01: /Users/damian.mankowski/Desktop/personal/rust/aoc-2021-opd/aoc-2021-dm/aoc_2021_01/src/main.rs

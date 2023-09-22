@@ -21,9 +21,9 @@ impl AocTask for SonarSweep {
         input
             .flatten()
             .map(|str| str.parse())
-            .try_collect::<_, Vec<i32>, _>()?
+            .try_collect::<_, Vec<_>, _>()?
             .windows(window_size)
-            .fold((0i32, None), |(increases, last), input| {
+            .fold((0, None), |(increases, last), input| {
                 match (last, input.iter().sum::<i32>()) {
                     (Some(a), b) if b > a => (increases + 1, Some(b)),
                     (_, b) => (increases, Some(b)),

@@ -7,9 +7,8 @@ def solve(filename: String, windowSize: Int) =
     .sliding(windowSize)
     .map(_.sum)
     .sliding(2)
-    .filter:
+    .count:
       case Seq(a, b) => a < b
-    .length
     .pipe(println)
 
 val filename = "../day1/input.txt"

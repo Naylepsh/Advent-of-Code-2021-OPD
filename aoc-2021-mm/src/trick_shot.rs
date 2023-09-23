@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::BoxedError;
-use aoc_framework::{AocInput, AocSolution, AocTask, traits::*};
+use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
 pub struct TrickShot;
 
@@ -10,7 +10,7 @@ impl AocTask for TrickShot {
         "tasks/17_trick_shot".into()
     }
 
-    fn solution(&self, input: AocInput, phase: usize) -> Result<AocSolution, BoxedError> {
-        input.flatten().solved()
+    fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {
+        input.solved()
     }
 }

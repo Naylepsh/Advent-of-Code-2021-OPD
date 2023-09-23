@@ -1,7 +1,7 @@
 use std::{collections::HashMap, path::PathBuf};
 
 use crate::BoxedError;
-use aoc_framework::{traits::*, AocInput, AocSolution, AocTask};
+use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::{eyre::eyre, Report};
 use itertools::Itertools;
 
@@ -67,9 +67,8 @@ impl AocTask for BinaryDiagnostic {
         "tasks/03_binary_diagnostic".into()
     }
 
-    fn solution(&self, input: AocInput, phase: usize) -> Result<AocSolution, BoxedError> {
-        let diagnostic =
-            Diagnostic::new(input.flatten().map(|str| str.chars().collect()).collect())?;
+    fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {
+        let diagnostic = Diagnostic::new(input.map(|str| str.chars().collect()).collect())?;
 
         match phase {
             1 => diagnostic.power_consumption()?,

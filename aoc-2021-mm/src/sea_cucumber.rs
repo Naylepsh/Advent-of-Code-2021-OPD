@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::BoxedError;
-use aoc_framework::{AocInput, AocSolution, AocTask, traits::*};
+use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
 pub struct SeaCucumber;
 
@@ -10,7 +10,7 @@ impl AocTask for SeaCucumber {
         "tasks/25_sea_cucumber".into()
     }
 
-    fn solution(&self, input: AocInput, phase: usize) -> Result<AocSolution, BoxedError> {
-        input.flatten().solved()
+    fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {
+        input.solved()
     }
 }

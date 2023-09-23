@@ -4,7 +4,7 @@ use std::{
 };
 
 use crate::BoxedError;
-use aoc_framework::{traits::*, AocInput, AocSolution, AocTask};
+use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::eyre::{bail, eyre, Context};
 use itertools::Itertools;
 
@@ -83,7 +83,7 @@ impl AocTask for Dive {
         "tasks/02_dive".into()
     }
 
-    fn solution(&self, input: AocInput, phase: usize) -> Result<AocSolution, BoxedError> {
+    fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {
         let op = match phase {
             1 => Add::add,
             2 => Mul::mul,
@@ -91,7 +91,6 @@ impl AocTask for Dive {
         };
 
         input
-            .flatten()
             .map(Move::try_from)
             .fold_ok(Position::default(), op)?
             .product()

@@ -1,7 +1,7 @@
 use std::{ops::Add, path::PathBuf};
 
 use crate::BoxedError;
-use aoc_framework::{traits::*, AocInput, AocSolution, AocTask};
+use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::{eyre::eyre, Report};
 use itertools::Itertools;
 
@@ -135,7 +135,7 @@ impl AocTask for RockPaperScissors {
         "tasks/warmup_2022_rock_paper_scissors".into()
     }
 
-    fn solution(&self, input: AocInput, phase: usize) -> Result<AocSolution, BoxedError> {
+    fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {
         let strategy = match phase {
             1 => StrategyType::Hand,
             2 => StrategyType::Result,
@@ -143,7 +143,7 @@ impl AocTask for RockPaperScissors {
         };
 
         input
-            .map(|r| r.map_err(|err| err.into()).and_then(Round::try_from))
+            .map(Round::try_from)
             .map_ok(|round| round.score(&strategy))
             .fold_ok(0, Add::add)
             .try_solved()

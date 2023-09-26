@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
-pub struct TransparentOrigami;
+pub struct Day05;
 
-impl AocTask for TransparentOrigami {
+impl AocTask for Day05 {
     fn directory(&self) -> PathBuf {
-        "tasks/13_transparent_origami".into()
+        "tasks/day_05".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

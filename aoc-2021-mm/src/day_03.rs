@@ -5,7 +5,7 @@ use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::{eyre::eyre, Report};
 use itertools::Itertools;
 
-pub struct BinaryDiagnostic;
+pub struct Day03;
 
 struct Diagnostic {
     data: Vec<char>,
@@ -113,9 +113,9 @@ impl<'data> Diagnostic {
     }
 }
 
-impl AocTask for BinaryDiagnostic {
+impl AocTask for Day03 {
     fn directory(&self) -> PathBuf {
-        "tasks/03_binary_diagnostic".into()
+        "tasks/day_03".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

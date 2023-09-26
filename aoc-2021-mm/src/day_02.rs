@@ -8,7 +8,7 @@ use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::eyre::{bail, eyre, Context};
 use itertools::Itertools;
 
-pub struct Dive;
+pub struct Day02;
 
 #[derive(Default)]
 struct Position {
@@ -78,9 +78,9 @@ impl TryFrom<String> for Move {
     }
 }
 
-impl AocTask for Dive {
+impl AocTask for Day02 {
     fn directory(&self) -> PathBuf {
-        "tasks/02_dive".into()
+        "tasks/day_02".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

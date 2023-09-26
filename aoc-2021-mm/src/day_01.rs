@@ -4,11 +4,11 @@ use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use itertools::Itertools;
 
-pub struct SonarSweep;
+pub struct Day01;
 
-impl AocTask for SonarSweep {
+impl AocTask for Day01 {
     fn directory(&self) -> PathBuf {
-        "tasks/01_sonar_sweep".into()
+        "tasks/day_01".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

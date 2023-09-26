@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
-pub struct SyntaxScoring;
+pub struct Day13;
 
-impl AocTask for SyntaxScoring {
+impl AocTask for Day13 {
     fn directory(&self) -> PathBuf {
-        "tasks/10_syntax_scoring".into()
+        "tasks/day_13".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

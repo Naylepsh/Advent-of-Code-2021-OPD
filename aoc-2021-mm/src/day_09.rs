@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
-pub struct DumboOctopus;
+pub struct Day09;
 
-impl AocTask for DumboOctopus {
+impl AocTask for Day09 {
     fn directory(&self) -> PathBuf {
-        "tasks/11_dumbo_octopus".into()
+        "tasks/day_09".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

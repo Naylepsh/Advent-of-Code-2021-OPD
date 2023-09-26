@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
-pub struct PacketDecoder;
+pub struct Day17;
 
-impl AocTask for PacketDecoder {
+impl AocTask for Day17 {
     fn directory(&self) -> PathBuf {
-        "tasks/16_packet_decoder".into()
+        "tasks/day_17".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

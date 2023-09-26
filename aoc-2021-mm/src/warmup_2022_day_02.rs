@@ -5,7 +5,7 @@ use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 use color_eyre::{eyre::eyre, Report};
 use itertools::Itertools;
 
-pub struct RockPaperScissors;
+pub struct Warmup2022Day02;
 
 #[derive(Clone, PartialEq, Debug)]
 enum Hand {
@@ -130,9 +130,9 @@ impl Round {
     }
 }
 
-impl AocTask for RockPaperScissors {
+impl AocTask for Warmup2022Day02 {
     fn directory(&self) -> PathBuf {
-        "tasks/warmup_2022_rock_paper_scissors".into()
+        "tasks/warmup_2022_day_02".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

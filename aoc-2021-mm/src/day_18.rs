@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
 
-pub struct ExtendedPolymerization;
+pub struct Day18;
 
-impl AocTask for ExtendedPolymerization {
+impl AocTask for Day18 {
     fn directory(&self) -> PathBuf {
-        "tasks/14_extended_polymerization".into()
+        "tasks/day_18".into()
     }
 
     fn solution(&self, input: AocStringIter, phase: usize) -> Result<AocSolution, BoxedError> {

@@ -25,7 +25,7 @@ impl ReadingSummary {
         }
     }
 
-    pub fn combine_mut(&mut self, other: ReadingSummary) -> () {
+    pub fn combine_mut(&mut self, other: ReadingSummary) {
         self.zeros += other.zeros;
         self.ones += other.ones;
     }

@@ -17,7 +17,14 @@ fn read_input() -> Vec<i32>{
         .collect()
 }
 
-fn solve(input: Vec<i32>) -> usize {
+fn solve_first(input: Vec<i32>) -> usize {
+    input
+        .windows(2)
+        .filter(|v| v[0] < v[1])
+        .count()
+}
+
+fn solve_second(input: Vec<i32>) -> usize {
     input
         .windows(4)
         .filter(|v| v[0] < v[3])

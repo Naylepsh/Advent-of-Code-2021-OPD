@@ -104,28 +104,39 @@ impl Board {
     }
 }
 
+fn solve_first(mut boards: Vec<Board>, draws: Vec<u32>) -> u32 {
+    let mut winning_score: Option<u32> = None;
+    'l: for draw in draws {
+        for board in &mut boards {
+            board.mark(draw);
+            if board.wins() {
+                winning_score = Some(board.unmarked_values().iter().sum::<u32>() * draw);
+                break 'l;
+            }
+        }
+    }
+
+    winning_score.unwrap()
+}
+
 fn main() {
     let text = read_text("./input.txt");
     let pattern = Regex::new(r"\n\n").unwrap();
     let result: Vec<&str> = pattern.split(text.as_str()).collect();
     let _ = match result.as_slice() {
         [raw_draws, boards @ ..] => {
-            let mut boards = boards
+            let boards = boards
                 .to_vec()
                 .iter()
                 .map(|board| Board::from_input(board.split("\n").map(|x| x.to_string()).collect()))
                 .collect::<Vec<_>>();
 
-            let mut winning_score: Option<u32> = None;
-            'l: for draw in raw_draws.split(',').map(|x| x.parse::<u32>().unwrap()) {
-                for board in &mut boards {
-                    board.mark(draw);
-                    if board.wins() {
-                        winning_score = Some(board.unmarked_values().iter().sum::<u32>() * draw);
-                        break 'l;
-                    }
-                }
-            }
+            let draws = raw_draws
+                .split(',')
+                .map(|x| x.parse::<u32>().unwrap())
+                .collect::<Vec<_>>();
+
+            let winning_score = solve_first(boards, draws);
 
             println!("{:?}", winning_score);
 

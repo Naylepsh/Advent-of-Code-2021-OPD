@@ -104,7 +104,8 @@ impl From<String> for Board {
 
 fn main() {
     let (numbers, mut boards) = read_input();
-    solve_first(numbers, &mut boards);
+    // solve_first(numbers, &mut boards);
+    solve_second(numbers, &mut boards);
 }
 
 fn solve_first(numbers: Vec<usize>, boards: &mut [Board]) {
@@ -121,6 +122,28 @@ fn solve_first(numbers: Vec<usize>, boards: &mut [Board]) {
     }
 
     if let Some((winning_board, winning_number)) = get_winning_board_and_number(numbers, boards) {
+        println!("{}", winning_board.get_sum_of_unmarked() * winning_number);
+    } else {
+        println!("No winners this time!");
+    }
+}
+
+fn solve_second(numbers: Vec<usize>, boards: &mut [Board]) {
+    let mut solved = vec![];
+    let mut won_boards = vec![];
+    for number in numbers {
+        for (index, board) in &mut boards.iter_mut().enumerate() {
+            if !board.is_solved() {
+                board.mark(number);
+            }
+            if board.is_solved() & !solved.contains(&index) {
+                won_boards.push((board.clone(), number));
+                solved.push(index);
+            }
+        }
+    }
+
+    if let Some((winning_board, winning_number)) = won_boards.last() {
         println!("{}", winning_board.get_sum_of_unmarked() * winning_number);
     } else {
         println!("No winners this time!");

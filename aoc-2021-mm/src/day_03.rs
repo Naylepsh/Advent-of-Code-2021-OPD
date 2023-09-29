@@ -61,7 +61,7 @@ impl<'data> Diagnostic {
             itertools::MinMaxResult::MinMax(min, max) if min == max && override_equal => {
                 Ok(('1', '0'))
             }
-            itertools::MinMaxResult::MinMax(min, max) => Ok((min.0.clone(), max.0.clone())),
+            itertools::MinMaxResult::MinMax(min, max) => Ok((*min.0, *max.0)),
         }
     }
 
@@ -81,19 +81,13 @@ impl<'data> Diagnostic {
             if oxygen.len() > 1 {
                 let (_, ox_gamma) =
                     self.epsilon_gamma(self.column(oxygen.iter().flatten(), idx), true)?;
-                oxygen = oxygen
-                    .into_iter()
-                    .filter(|row| row.get(idx) == Some(&ox_gamma))
-                    .collect();
+                oxygen.retain(|row| row.get(idx) == Some(&ox_gamma));
             }
 
             if co2.len() > 1 {
                 let (co2_epsilon, _) =
                     self.epsilon_gamma(self.column(co2.iter().flatten(), idx), true)?;
-                co2 = co2
-                    .into_iter()
-                    .filter(|row| row.get(idx) == Some(&co2_epsilon))
-                    .collect();
+                co2.retain(|row| row.get(idx) == Some(&co2_epsilon));
             }
 
             if oxygen.len() == 1 && co2.len() == 1 {

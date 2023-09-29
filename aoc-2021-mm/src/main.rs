@@ -1,4 +1,5 @@
 #![feature(lint_reasons)]
+#![feature(iter_array_chunks)]
 #![expect(unused_variables)]
 
 mod day_01;

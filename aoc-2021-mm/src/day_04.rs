@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use crate::BoxedError;
 use aoc_framework::{traits::*, AocSolution, AocStringIter, AocTask};
@@ -7,7 +7,7 @@ use itertools::Itertools;
 
 pub struct Day04;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 struct Board {
     data: Vec<i32>,
     hits: Vec<bool>,
@@ -28,6 +28,16 @@ impl<'board> Board {
             .for_each(|hit| self.hits[hit] = true);
     }
 
+    fn score(&self) -> i32 {
+        self.data
+            .iter()
+            .zip(self.hits.iter())
+            .fold(0, |acc, (number, hit)| match hit {
+                false => acc + number,
+                true => acc,
+            })
+    }
+
     fn hits_row(&'board self, idx: usize) -> impl Iterator<Item = &bool> + 'board {
         self.hits.iter().skip(idx * 5).take(5)
     }
@@ -39,27 +49,33 @@ impl<'board> Board {
 
 #[derive(Debug, Default)]
 struct BingoRoundIterator {
-    boards: Vec<Board>,
+    boards: HashMap<usize, Board>,
     balls: Vec<i32>,
 }
 
 impl Iterator for BingoRoundIterator {
-    type Item = Option<usize>;
+    type Item = Option<(Vec<Board>, i32)>;
 
-    // Plays one round of bingo, returns a winner if there is one
+    // Plays one round of bingo, returns the winning boards and the last ball
     fn next(&mut self) -> Option<Self::Item> {
         let ball = self.balls.pop()?;
 
-        let winner = self
+        let winner_ids: Vec<_> = self
             .boards
             .iter_mut()
-            .update(|board| board.play(&ball))
-            .enumerate()
-            .find(|(i, board)| board.bingo());
+            .update(|(_, board)| board.play(&ball))
+            .filter(|(_, board)| board.bingo())
+            .map(|(index, _)| *index)
+            .collect();
 
-        match winner {
-            Some(winner) => Some(Some(winner.0)),
-            None => Some(None),
+        let winners: Vec<Board> = winner_ids
+            .into_iter()
+            .map(|winner| self.boards.remove(&winner).unwrap())
+            .collect();
+
+        match winners.len() {
+            0 => Some(None),
+            _ => Some(Some((winners, ball))),
         }
     }
 }
@@ -82,7 +98,7 @@ impl TryFrom<[String; 5]> for Board {
         } else {
             Ok(Self {
                 data,
-                hits: Default::default(),
+                hits: vec![false; 25],
             })
         }
     }
@@ -102,19 +118,31 @@ impl AocTask for Day04 {
             .rev()
             .collect();
 
-        let boards: Result<Vec<Board>, _> = input
-            .filter(|line| line.is_empty())
+        let boards: HashMap<usize, Board> = input
+            .filter(|line| !line.is_empty())
             .array_chunks()
             .map(Board::try_from)
-            .collect();
+            .process_results(|results| results.enumerate().collect())?;
 
-        let bingo = BingoRoundIterator {
+        let bingo_iterator = BingoRoundIterator {
             balls: balls?,
-            boards: boards?,
+            boards,
         };
 
-        println!("{bingo:#?}");
+        let mut bingos = bingo_iterator.filter(|bingo| bingo.is_some()).flatten();
 
-        0.solved()
+        // Safe to unwarp here since if there were no winners iterator wouldn't return a Some
+        let (bingo_score, last_ball) = match phase {
+            1 => bingos
+                .next()
+                .map(|(winners, ball)| (winners.first().unwrap().score(), ball)),
+            2 => bingos
+                .last()
+                .map(|(winners, ball)| (winners.last().unwrap().score(), ball)),
+            _ => todo!(),
+        }
+        .ok_or(eyre!("No bingos found"))?;
+
+        (bingo_score * last_ball).solved()
     }
 }

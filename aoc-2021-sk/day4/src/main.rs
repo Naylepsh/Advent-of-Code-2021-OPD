@@ -30,7 +30,7 @@ impl fmt::Display for Board {
             for cell in row.iter() {
                 write!(f, "{} ", cell)?;
             }
-            writeln!(f, "")?
+            writeln!(f)?
         }
         Ok(())
     }
@@ -40,7 +40,7 @@ impl Board {
     pub fn from_input(lines: Vec<String>) -> Board {
         let board = lines
             .iter()
-            .filter(|line| line.len() > 0)
+            .filter(|line| line.is_empty())
             .map(|line| {
                 line.split_whitespace()
                     .map(|x| Cell {
@@ -72,34 +72,30 @@ impl Board {
             .count()
             > 0;
 
-        // Couldn't do it with filters and maps, because compiler complains about access to &&Vec
-        // through usize values?
         let mut wins_vertically = false;
-        for col in 0..self.rows[0].len() {
+        self.rows.iter().for_each(|row| {
             let mut marked = 0;
-            for row in 0..self.rows.len() {
-                if self.rows[row][col].marked {
+            row.iter().for_each(|num| {
+                if num.marked {
                     marked += 1;
                 }
+            });
+            if marked == row.len() {
+                wins_vertically = true;
             }
-            if marked == self.rows[0].len() {
-                wins_vertically = true
-            }
-        }
-
+        });
         wins_horiozntally || wins_vertically
     }
 
     pub fn unmarked_values(&self) -> Vec<u32> {
         self.rows
             .iter()
-            .map(|row| {
+            .flat_map(|row| {
                 row.iter()
-                    .filter(|cell| cell.marked == false)
+                    .filter(|cell| !cell.marked)
                     .map(|cell| cell.value)
                     .collect::<Vec<_>>()
             })
-            .flatten()
             .collect()
     }
 }
@@ -123,12 +119,12 @@ fn main() {
     let text = read_text("./input.txt");
     let pattern = Regex::new(r"\n\n").unwrap();
     let result: Vec<&str> = pattern.split(text.as_str()).collect();
-    let _ = match result.as_slice() {
+    match result.as_slice() {
         [raw_draws, boards @ ..] => {
             let boards = boards
                 .to_vec()
                 .iter()
-                .map(|board| Board::from_input(board.split("\n").map(|x| x.to_string()).collect()))
+                .map(|board| Board::from_input(board.split('\n').map(|x| x.to_string()).collect()))
                 .collect::<Vec<_>>();
 
             let draws = raw_draws

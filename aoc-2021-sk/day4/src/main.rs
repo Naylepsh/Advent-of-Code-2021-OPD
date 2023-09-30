@@ -70,9 +70,7 @@ impl Board {
         let wins_horiozntally = self
             .rows
             .iter()
-            .filter(|row| row.iter().filter(|cell| cell.marked).count() == row_len)
-            .count()
-            > 0;
+            .any(|row| row.iter().filter(|cell| cell.marked).count() == row_len);
 
         let wins_vertically = (0..row_len)
             .any(|col| self.rows.iter().filter(|row| row[col].marked).count() == row_len);

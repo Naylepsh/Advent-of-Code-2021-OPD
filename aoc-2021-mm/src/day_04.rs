@@ -17,10 +17,10 @@ impl<'board> Board {
     fn bingo(&self) -> bool {
         let rows = (0..5).map(|row| self.hits_row(row));
         let cols = (0..5).map(|col| self.hits_col(col));
-        let bingo = rows
-            .chain(cols)
-            .find_map(|mut hit_iter| hit_iter.all(|&hit| hit).then_some(())); // Find the first bingo
-        bingo.is_some()
+
+        // Find the first bingo
+        rows.chain(cols)
+            .any(|mut hit_iter| hit_iter.all(|&hit| hit))
     }
 
     fn play(&mut self, ball: &i32) {

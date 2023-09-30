@@ -6,7 +6,7 @@ fn read_text(filename: &str) -> String {
     read_to_string(filename).unwrap()
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Cell {
     value: u32,
     marked: bool,
@@ -19,7 +19,7 @@ impl fmt::Display for Cell {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Board {
     rows: Vec<Vec<Cell>>,
 }
@@ -119,8 +119,36 @@ fn solve_first(mut boards: Vec<Board>, draws: Vec<u32>) -> u32 {
     winning_score.unwrap()
 }
 
+fn solve_second(mut boards: Vec<Board>, draws: Vec<u32>, mut fininshed_boards: Vec<usize>) -> u32 {
+    if draws.len() == 0 {
+        0
+    } else {
+        let draw = draws[0];
+        let mut boards_finished_this_round = vec![];
+        boards.iter_mut().enumerate().for_each(|(i, board)| {
+            if !fininshed_boards.contains(&i) {
+                board.mark(draw);
+                if board.wins() {
+                    fininshed_boards.push(i);
+                    boards_finished_this_round.push(board.clone());
+                }
+            }
+        });
+
+        if fininshed_boards.len() == boards.len() {
+            if let Some(board) = boards_finished_this_round.last() {
+                return board.unmarked_values().iter().sum::<u32>() * draw;
+            }
+        }
+
+        let (_, tail) = draws.split_first().unwrap();
+        solve_second(boards, tail.to_vec(), fininshed_boards)
+    }
+}
+
 fn main() {
     let text = read_text("./input.txt");
+    // let text = read_text("./example.txt");
     let pattern = Regex::new(r"\n\n").unwrap();
     let result: Vec<&str> = pattern.split(text.as_str()).collect();
     let _ = match result.as_slice() {
@@ -136,7 +164,8 @@ fn main() {
                 .map(|x| x.parse::<u32>().unwrap())
                 .collect::<Vec<_>>();
 
-            let winning_score = solve_first(boards, draws);
+            // let winning_score = solve_first(boards, draws);
+            let winning_score = solve_second(boards, draws, vec![]);
 
             println!("{:?}", winning_score);
 

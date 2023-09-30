@@ -48,8 +48,8 @@ dependencies = [
 
 [[package]]
 name = "aoc-framework"
-version = "0.7.0"
-source = "git+https://github.com/Michal-Miko/aoc-framework.git?tag=0.7.0#e5711d897f3f8091e3ee3590429e96fe191cd19c"
+version = "0.8.2"
+source = "git+https://github.com/Michal-Miko/aoc-framework.git?tag=0.8.2#7cf1ed2d99fa0e2f541c56c20dc50bfefc58591d"
 dependencies = [
  "crossterm",
  "dialoguer",

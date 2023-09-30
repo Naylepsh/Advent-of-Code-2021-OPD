@@ -15,10 +15,12 @@ struct Board {
 
 impl<'board> Board {
     fn bingo(&self) -> bool {
-        let rows = (0..5).map(|row| self.hits_row(row).all(|hit| *hit));
-        let cols = (0..5).map(|col| self.hits_col(col).all(|hit| *hit));
-        let bingo = rows.chain(cols).find(|bingo| *bingo);
-        matches!(bingo, Some(true))
+        let rows = (0..5).map(|row| self.hits_row(row));
+        let cols = (0..5).map(|col| self.hits_col(col));
+        let bingo = rows
+            .chain(cols)
+            .find_map(|mut hit_iter| hit_iter.all(|&hit| hit).then_some(())); // Find the first bingo
+        bingo.is_some()
     }
 
     fn play(&mut self, ball: &i32) {
@@ -38,12 +40,12 @@ impl<'board> Board {
             })
     }
 
-    fn hits_row(&'board self, idx: usize) -> impl Iterator<Item = &bool> + 'board {
-        self.hits.iter().skip(idx * 5).take(5)
+    fn hits_row(&'board self, idx: usize) -> Box<dyn Iterator<Item = &bool> + 'board> {
+        Box::new(self.hits.iter().skip(idx * 5).take(5))
     }
 
-    fn hits_col(&'board self, idx: usize) -> impl Iterator<Item = &bool> + 'board {
-        self.hits.iter().skip(idx).step_by(5)
+    fn hits_col(&'board self, idx: usize) -> Box<dyn Iterator<Item = &bool> + 'board> {
+        Box::new(self.hits.iter().skip(idx).step_by(5))
     }
 }
 
@@ -54,9 +56,9 @@ struct BingoRoundIterator {
 }
 
 impl Iterator for BingoRoundIterator {
-    type Item = Option<(Vec<Board>, i32)>;
+    type Item = (Vec<Board>, i32);
 
-    // Plays one round of bingo, returns the winning boards and the last ball
+    // Plays one round of bingo, returns the winning boards and the ball that was played
     fn next(&mut self) -> Option<Self::Item> {
         let ball = self.balls.pop()?;
 
@@ -64,18 +66,17 @@ impl Iterator for BingoRoundIterator {
             .boards
             .iter_mut()
             .update(|(_, board)| board.play(&ball))
-            .filter(|(_, board)| board.bingo())
-            .map(|(index, _)| *index)
+            .filter_map(|(&index, board)| board.bingo().then_some(index))
             .collect();
 
         let winners: Vec<Board> = winner_ids
             .into_iter()
-            .map(|winner| self.boards.remove(&winner).unwrap())
+            .map(|winner| self.boards.remove(&winner).unwrap()) // Safe unwrap
             .collect();
 
         match winners.len() {
-            0 => Some(None),
-            _ => Some(Some((winners, ball))),
+            0 => Some((vec![], ball)),
+            _ => Some((winners, ball)),
         }
     }
 }
@@ -129,9 +130,9 @@ impl AocTask for Day04 {
             boards,
         };
 
-        let mut bingos = bingo_iterator.filter(|bingo| bingo.is_some()).flatten();
+        let mut bingos = bingo_iterator.filter(|(winners, ball)| !winners.is_empty());
 
-        // Safe to unwarp here since if there were no winners iterator wouldn't return a Some
+        // Safe to unwarp here since the empty vectors have been filtered out
         let (bingo_score, last_ball) = match phase {
             1 => bingos
                 .next()

@@ -64,7 +64,7 @@ impl Board {
         })
     }
 
-    pub fn wins(&mut self) -> bool {
+    pub fn wins(&self) -> bool {
         let row_len = self.rows[0].len();
 
         let wins_horiozntally = self

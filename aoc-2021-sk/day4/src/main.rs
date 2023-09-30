@@ -40,7 +40,7 @@ impl Board {
     pub fn from_input(lines: Vec<String>) -> Board {
         let board = lines
             .iter()
-            .filter(|line| line.is_empty())
+            .filter(|line| !line.is_empty())
             .map(|line| {
                 line.split_whitespace()
                     .map(|x| Cell {
@@ -64,26 +64,19 @@ impl Board {
         })
     }
 
-    pub fn wins(&self) -> bool {
+    pub fn wins(&mut self) -> bool {
+        let row_len = self.rows[0].len();
+
         let wins_horiozntally = self
             .rows
             .iter()
-            .filter(|row| row.iter().filter(|cell| cell.marked).count() == row.len())
+            .filter(|row| row.iter().filter(|cell| cell.marked).count() == row_len)
             .count()
             > 0;
 
-        let mut wins_vertically = false;
-        self.rows.iter().for_each(|row| {
-            let mut marked = 0;
-            row.iter().for_each(|num| {
-                if num.marked {
-                    marked += 1;
-                }
-            });
-            if marked == row.len() {
-                wins_vertically = true;
-            }
-        });
+        let wins_vertically = (0..row_len)
+            .any(|col| self.rows.iter().filter(|row| row[col].marked).count() == row_len);
+
         wins_horiozntally || wins_vertically
     }
 
